@@ -207,6 +207,8 @@ class JoyButton(QWidget):
         self.button2 = QPushButton('B', self)
         self.button3 = QPushButton('X', self)
         self.button4 = QPushButton('Y', self)
+        self.button5 = QPushButton('LB', self)
+        self.button6 = QPushButton('RB', self)
 
         self.button_msg = None
         self.botton_pub = rospy.Publisher('joy', sensor_msgs.msg.Joy, queue_size=1)
@@ -215,11 +217,15 @@ class JoyButton(QWidget):
         self.button2.clicked.connect(self.on_button2_clicked)
         self.button3.clicked.connect(self.on_button3_clicked)
         self.button4.clicked.connect(self.on_button4_clicked)
+        self.button5.clicked.connect(self.on_button5_clicked)
+        self.button6.clicked.connect(self.on_button6_clicked)
 
         self.button_layout.addWidget(self.button1)
         self.button_layout.addWidget(self.button2)
         self.button_layout.addWidget(self.button3)
         self.button_layout.addWidget(self.button4)
+        self.button_layout.addWidget(self.button5)
+        self.button_layout.addWidget(self.button6)
 
         self.setLayout(self.button_layout)
     
@@ -262,6 +268,26 @@ class JoyButton(QWidget):
 
         self.botton_pub.publish(joy_msg)
         print('Button Y Clicked')
+        
+    def on_button5_clicked(self):
+        joy_msg = sensor_msgs.msg.Joy()
+        joy_msg.header.stamp = rospy.Time.now()
+        joy_msg.header.frame_id = 'joy'
+        joy_msg.axes = [0, 0, 0, 0, 0, 0, 0, 0]
+        joy_msg.buttons = [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+
+        self.botton_pub.publish(joy_msg)
+        print('Button LB Clicked')
+    
+    def on_button6_clicked(self):
+        joy_msg = sensor_msgs.msg.Joy()
+        joy_msg.header.stamp = rospy.Time.now()
+        joy_msg.header.frame_id = 'joy'
+        joy_msg.axes = [0, 0, 0, 0, 0, 0, 0, 0]
+        joy_msg.buttons = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
+
+        self.botton_pub.publish(joy_msg)
+        print('Button RB Clicked')
 
     def get_button_msg(self):
         return self.button_msg
